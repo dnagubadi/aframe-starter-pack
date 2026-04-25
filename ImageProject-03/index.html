@@ -1,15 +1,103 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"> </script>
+    <meta charset="utf-8">
+    <title>Virtual Golf Hole</title>
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      #putt-container {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+      }
+
+      #puttBtn {
+        padding: 14px 32px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 8px;
+        background: white;
+        border: 2px solid #333;
+      }
+
+      #puttBtn:hover {
+        background: #f0f0f0;
+      }
+
+      #puttBtn:active {
+        background: #ddd;
+      }
+    </style>
   </head>
+
   <body>
     <a-scene>
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
-      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
-      <a-sky color="#ECECEC"></a-sky>
+
+      <a-sky src="sunset.jpg"></a-sky>
+
+      
+
+      <a-entity 
+        gltf-model="green.glb"
+        position="0 0 -4"
+        scale="8 1 8">
+      </a-entity>
+
+      <a-sphere 
+        id="ball"
+        position=".27 0.2 -1.2" 
+        radius="0.1" 
+        color="white"
+        animation__move="property: position; to: .4 0.2 -6.65; dur: 2000; easing: easeInQuad; startEvents: putt">
+      </a-sphere>
+
+      <a-entity 
+        gltf-model="golfclub.glb"
+        position="0.3 .18 -1"
+        scale="0.1 0.1 0.1"
+        rotation="0 -90 0">
+      </a-entity>
+
+      <a-entity 
+        gltf-model="golfflag.glb"
+        position="0 3 -6"
+        scale="6 6 6">
+      </a-entity>
+
+      <a-light type="ambient" intensity="0.8" color="#ffccaa"></a-light>
+      <a-light type="directional" position="2 4 2" color="#ff9966"></a-light>
+
+      <a-camera position="0 1.6 2"></a-camera>
+
     </a-scene>
+
+    <div id="putt-container">
+      <button id="puttBtn">⛳ Putt</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const ball = document.querySelector("#ball");
+        const puttBtn = document.querySelector("#puttBtn");
+
+        puttBtn.addEventListener("click", function () {
+          ball.emit("putt");
+        });
+
+        ball.addEventListener("animationcomplete__move", function () {
+          setTimeout(() => {
+            ball.setAttribute("position", ".27 0.2 -1.2");
+          }, 500);
+        });
+      });
+    </script>
+
   </body>
 </html>
